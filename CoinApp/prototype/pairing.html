@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 情侣配对</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navigation {
+            position: sticky;
+            top: 44px;
+            height: 44px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .top-navigation .title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        
+        .top-navigation .back-button {
+            position: absolute;
+            left: 16px;
+            font-size: 17px;
+            color: #FF6B6B;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding: 24px;
+            min-height: 100vh;
+        }
+        
+        /* 头部介绍 */
+        .pairing-intro {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .pairing-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            background-color: #FFE0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 16px auto;
+        }
+        
+        .pairing-icon i {
+            font-size: 50px;
+            color: #FF6B6B;
+        }
+        
+        .pairing-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .pairing-description {
+            font-size: 15px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+        
+        /* 标签切换 */
+        .pairing-tabs {
+            display: flex;
+            background-color: #F1F1F1;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        
+        .pairing-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .pairing-tab.active {
+            background-color: #FFFFFF;
+            color: #FF6B6B;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .pairing-tab.inactive {
+            color: #9E9E9E;
+        }
+        
+        /* 配对码输入 */
+        .pairing-code-input {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .code-digit {
+            width: 50px;
+            height: 60px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s ease;
+            background-color: #FFFFFF;
+        }
+        
+        .code-digit:focus {
+            border-color: #FF6B6B;
+        }
+        
+        /* 配对码展示 */
+        .pairing-code-display {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+        
+        .code-value {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin-bottom: 16px;
+            color: #292F36;
+        }
+        
+        .code-expiry {
+            font-size: 14px;
+            color: #9E9E9E;
+            margin-bottom: 20px;
+        }
+        
+        .code-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .code-button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            margin: 0 8px;
+        }
+        
+        .code-button.copy {
+            background-color: #F1F1F1;
+            color: #292F36;
+        }
+        
+        .code-button.share {
+            background-color: #FFE0E0;
+            color: #FF6B6B;
+        }
+        
+        /* 按钮样式 */
+        .primary-button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            margin-bottom: 16px;
+            background-color: #FF6B6B;
+            color: #FFFFFF;
+        }
+        
+        /* 其他配对方式 */
+        .other-methods {
+            margin-top: 32px;
+        }
+        
+        .other-methods-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .method-item {
+            display: flex;
+            align-items: center;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .method-item:hover {
+            background-color: #F9F9F9;
+        }
+        
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+        }
+        
+        .method-icon.qr {
+            background-color: #E0F2FE;
+        }
+        
+        .method-icon.link {
+            background-color: #DCFCE7;
+        }
+        
+        .method-icon i {
+            font-size: 20px;
+        }
+        
+        .method-info {
+            flex: 1;
+        }
+        
+        .method-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .method-description {
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+        
+        .method-arrow {
+            color: #9E9E9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="top-navigation">
+            <div class="back-button">
+                <i class="fa fa-arrow-left"></i>
+            </div>
+            <div class="title">情侣配对</div>
+            <div class="w-8"></div> <!-- 占位，保持标题居中 -->
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 头部介绍 -->
+            <div class="pairing-intro">
+                <div class="pairing-icon">
+                    <i class="fa fa-heart"></i>
+                </div>
+                <div class="pairing-title">与您的伴侣配对</div>
+                <div class="pairing-description">
+                    通过配对码或其他方式将您的账户与伴侣连接，
+                    一起记录美好时光和完成任务
+                </div>
+            </div>
+            
+            <!-- 标签切换 -->
+            <div class="pairing-tabs">
+                <div class="pairing-tab active">输入配对码</div>
+                <div class="pairing-tab inactive">生成配对码</div>
+            </div>
+            
+            <!-- 输入配对码表单 -->
+            <div id="input-pairing-tab" class="pairing-tab-content">
+                <div class="pairing-code-input">
+                    <input type="text" maxlength="1" class="code-digit" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" inputmode="numeric">
+                    <input type="text" maxlength="1" class="code-digit" inputmode="numeric">
+                </div>
+                
+                <button class="primary-button">确认配对</button>
+                
+                <div class="text-center text-sm text-gray-dark">
+                    配对码由6位数字组成，有效期为30分钟
+                </div>
+            </div>
+            
+            <!-- 生成配对码表单 (默认隐藏) -->
+            <div id="generate-pairing-tab" class="pairing-tab-content" style="display: none;">
+                <div class="pairing-code-display">
+                    <div class="code-value">A8F3D7</div>
+                    <div class="code-expiry">
+                        <i class="fa fa-clock-o"></i> 有效期还剩 29:58
+                    </div>
+                    <div class="code-actions">
+                        <button class="code-button copy">
+                            <i class="fa fa-copy"></i> 复制
+                        </button>
+                        <button class="code-button share">
+                            <i class="fa fa-share-alt"></i> 分享
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="other-methods">
+                    <div class="other-methods-title">其他配对方式</div>
+                    
+                    <div class="method-item">
+                        <div class="method-icon qr">
+                            <i class="fa fa-qrcode"></i>
+                        </div>
+                        <div class="method-info">
+                            <div class="method-title">扫描二维码</div>
+                            <div class="method-description">让伴侣扫描您的二维码进行配对</div>
+                        </div>
+                        <div class="method-arrow">
+                            <i class="fa fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="method-item">
+                        <div class="method-icon link">
+                            <i class="fa fa-link"></i>
+                        </div>
+                        <div class="method-info">
+                            <div class="method-title">通过链接邀请</div>
+                            <div class="method-description">生成邀请链接发送给您的伴侣</div>
+                        </div>
+                        <div class="method-arrow">
+                            <i class="fa fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 标签切换逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputTab = document.querySelector('.pairing-tab.active');
+            const generateTab = document.querySelector('.pairing-tab.inactive');
+            const inputContent = document.getElementById('input-pairing-tab');
+            const generateContent = document.getElementById('generate-pairing-tab');
+            
+            inputTab.addEventListener('click', function() {
+                inputTab.classList.add('active');
+                inputTab.classList.remove('inactive');
+                generateTab.classList.add('inactive');
+                generateTab.classList.remove('active');
+                inputContent.style.display = 'block';
+                generateContent.style.display = 'none';
+            });
+            
+            generateTab.addEventListener('click', function() {
+                generateTab.classList.add('active');
+                generateTab.classList.remove('inactive');
+                inputTab.classList.add('inactive');
+                inputTab.classList.remove('active');
+                generateContent.style.display = 'block';
+                inputContent.style.display = 'none';
+            });
+            
+            // 配对码输入框自动跳转
+            const codeDigits = document.querySelectorAll('.code-digit');
+            codeDigits.forEach((digit, index) => {
+                digit.addEventListener('input', function() {
+                    if (this.value.length === 1 && index < codeDigits.length - 1) {
+                        codeDigits[index + 1].focus();
+                    }
+                });
+                
+                digit.addEventListener('keydown', function(e) {
+                    // 处理退格键，删除当前字符并跳到上一个输入框
+                    if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        codeDigits[index - 1].focus();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

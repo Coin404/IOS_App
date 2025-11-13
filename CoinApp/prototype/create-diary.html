@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 写日记</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navigation {
+            position: sticky;
+            top: 44px;
+            height: 44px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .top-navigation .back-button {
+            font-size: 17px;
+            color: #FF6B6B;
+        }
+        
+        .top-navigation .title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .top-navigation .publish-button {
+            font-size: 17px;
+            color: #FF6B6B;
+            font-weight: 600;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding-bottom: 24px;
+        }
+        
+        /* 日记编辑器 */
+        .diary-editor {
+            background-color: #FFFFFF;
+            padding: 16px;
+        }
+        
+        .title-input {
+            width: 100%;
+            padding: 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            margin-bottom: 16px;
+        }
+        
+        .content-input {
+            width: 100%;
+            min-height: 300px;
+            font-size: 16px;
+            line-height: 1.7;
+            border: none;
+            outline: none;
+            resize: none;
+        }
+        
+        /* 心情选择器 */
+        .mood-selector {
+            background-color: #FFFFFF;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .mood-options {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .mood-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+        
+        .mood-option.active .mood-icon {
+            background-color: #FFF3E0;
+            color: #FF9800;
+        }
+        
+        .mood-option.inactive .mood-icon {
+            background-color: #F1F1F1;
+            color: #9E9E9E;
+        }
+        
+        .mood-name {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+        
+        .mood-option.active .mood-name {
+            color: #292F36;
+            font-weight: 500;
+        }
+        
+        /* 图片选择器 */
+        .image-selector {
+            background-color: #FFFFFF;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .selected-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background-color: #FF6B6B;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+        }
+        
+        .add-image-button {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            background-color: #F7F7F7;
+            border: 2px dashed #E0E0E0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #9E9E9E;
+            cursor: pointer;
+        }
+        
+        .add-image-button i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .add-image-button span {
+            font-size: 12px;
+        }
+        
+        /* 标签选择 */
+        .tags-selector {
+            background-color: #FFFFFF;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        .tag-option {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        
+        .tag-option.selected {
+            background-color: #FFE0E0;
+            color: #FF6B6B;
+            font-weight: 500;
+        }
+        
+        .tag-option.unselected {
+            background-color: #F1F1F1;
+            color: #6E6E6E;
+        }
+        
+        /* 私密设置 */
+        .privacy-setting {
+            background-color: #FFFFFF;
+            padding: 16px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .privacy-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .privacy-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #E8F5E9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+        
+        .privacy-icon i {
+            font-size: 16px;
+            color: #4CAF50;
+        }
+        
+        .privacy-text {
+            font-size: 16px;
+        }
+        
+        /* 开关控件 */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E0E0E0;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-input:checked + .toggle-slider {
+            background-color: #FF6B6B;
+        }
+        
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="top-navigation">
+            <div class="back-button">
+                <i class="fa fa-arrow-left"></i>
+            </div>
+            <div class="title">写日记</div>
+            <div class="publish-button">发布</div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 日记编辑器 -->
+            <div class="diary-editor">
+                <input type="text" class="title-input" placeholder="输入日记标题" value="一周年纪念日晚餐">
+                <textarea class="content-input" placeholder="记录你的心情...">今天是我们认识一周年的纪念日！时间过得真快，感觉就像昨天才认识一样。
+
+我们选择了第一次见面的餐厅，那种熟悉又温馨的感觉真的很特别。餐厅还为我们准备了惊喜，送上了周年纪念的甜点，上面用巧克力写着"一周年快乐"。
+
+整个晚餐过程中，我们聊了很多，回顾了过去一年的点点滴滴。从第一次见面的紧张和陌生，到现在的默契和理解，每一步都值得珍惜。
+
+吃完晚餐后，我们在附近的公园里散步，晚风轻轻吹过，感觉无比幸福。这一年里，有欢笑也有小矛盾，但正是这些经历让我们的关系更加牢固。
+
+期待未来的每一个纪念日，都能和你一起度过。我爱你，我的宝贝！</textarea>
+            </div>
+            
+            <!-- 心情选择器 -->
+            <div class="mood-selector">
+                <div class="section-title">今天的心情</div>
+                <div class="mood-options">
+                    <div class="mood-option active">
+                        <div class="mood-icon">
+                            <i class="fa fa-smile-o"></i>
+                        </div>
+                        <div class="mood-name">开心</div>
+                    </div>
+                    <div class="mood-option inactive">
+                        <div class="mood-icon">
+                            <i class="fa fa-meh-o"></i>
+                        </div>
+                        <div class="mood-name">平静</div>
+                    </div>
+                    <div class="mood-option inactive">
+                        <div class="mood-icon">
+                            <i class="fa fa-tired"></i>
+                        </div>
+                        <div class="mood-name">疲惫</div>
+                    </div>
+                    <div class="mood-option inactive">
+                        <div class="mood-icon">
+                            <i class="fa fa-sad-tear"></i>
+                        </div>
+                        <div class="mood-name">难过</div>
+                    </div>
+                    <div class="mood-option inactive">
+                        <div class="mood-icon">
+                            <i class="fa fa-angry"></i>
+                        </div>
+                        <div class="mood-name">生气</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 图片选择器 -->
+            <div class="image-selector">
+                <div class="section-title">添加图片</div>
+                <div class="image-grid">
+                    <div style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1550966871-6175678056ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="晚餐照片" class="selected-image">
+                        <div class="remove-image">
+                            <i class="fa fa-times"></i>
+                        </div>
+                    </div>
+                    <div style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="礼物照片" class="selected-image">
+                        <div class="remove-image">
+                            <i class="fa fa-times"></i>
+                        </div>
+                    </div>
+                    <div class="add-image-button">
+                        <i class="fa fa-plus"></i>
+                        <span>添加图片</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 标签选择 -->
+            <div class="tags-selector">
+                <div class="section-title">添加标签</div>
+                <div class="tags-list">
+                    <div class="tag-option selected">纪念日</div>
+                    <div class="tag-option selected">晚餐</div>
+                    <div class="tag-option unselected">约会</div>
+                    <div class="tag-option unselected">旅行</div>
+                    <div class="tag-option unselected">生活</div>
+                    <div class="tag-option unselected">心情</div>
+                    <div class="tag-option unselected">工作</div>
+                </div>
+                <div class="tag-option unselected add-tag-button">
+                    <i class="fa fa-plus"></i> 添加新标签
+                </div>
+            </div>
+            
+            <!-- 私密设置 -->
+            <div class="privacy-setting">
+                <div class="privacy-info">
+                    <div class="privacy-icon">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                    <div class="privacy-text">仅自己可见</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" class="toggle-input">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 心情选择交互
+            const moodOptions = document.querySelectorAll('.mood-option');
+            moodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选中状态
+                    moodOptions.forEach(opt => {
+                        opt.classList.remove('active');
+                        opt.classList.add('inactive');
+                    });
+                    // 设置当前选中状态
+                    this.classList.remove('inactive');
+                    this.classList.add('active');
+                });
+            });
+            
+            // 标签选择交互
+            const tagOptions = document.querySelectorAll('.tag-option:not(.add-tag-button)');
+            tagOptions.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    this.classList.toggle('unselected');
+                });
+            });
+            
+            // 移除图片功能
+            const removeButtons = document.querySelectorAll('.remove-image');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 在实际应用中，这里会移除对应的图片
+                    console.log('移除图片');
+                });
+            });
+            
+            // 添加图片按钮
+            const addImageButton = document.querySelector('.add-image-button');
+            addImageButton.addEventListener('click', function() {
+                // 在实际应用中，这里会触发文件选择器
+                console.log('添加图片');
+            });
+        });
+    </script>
+</body>
+</html>

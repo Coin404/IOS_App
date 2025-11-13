@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 心情日记</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navigation {
+            position: sticky;
+            top: 44px;
+            height: 44px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .top-navigation .title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding-bottom: 80px;
+        }
+        
+        /* 时间分组标题 */
+        .time-group-title {
+            padding: 12px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6E6E6E;
+            background-color: #F7F7F7;
+        }
+        
+        /* 日记卡片 */
+        .diary-card {
+            background-color: #FFFFFF;
+            margin-bottom: 1px;
+            padding: 16px;
+            position: relative;
+        }
+        
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .diary-date {
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+        
+        .diary-mood {
+            display: flex;
+            align-items: center;
+            background-color: #FFF3E0;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .diary-mood i {
+            margin-right: 4px;
+            color: #FF9800;
+        }
+        
+        .diary-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .diary-excerpt {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .diary-media {
+            margin-top: 12px;
+            display: flex;
+        }
+        
+        .diary-image {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            margin-right: 8px;
+            object-fit: cover;
+        }
+        
+        .image-count-badge {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .diary-actions {
+            display: flex;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #F1F1F1;
+        }
+        
+        .diary-action {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+        
+        .diary-action i {
+            margin-right: 6px;
+        }
+        
+        /* 添加日记按钮 */
+        .add-diary-button {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background-color: #FF6B6B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+            z-index: 90;
+        }
+        
+        .add-diary-button i {
+            font-size: 24px;
+            color: white;
+        }
+        
+        /* 底部标签栏 */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 49px;
+            background-color: #FFFFFF;
+            display: flex;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tab-item i {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+        
+        .tab-item span {
+            font-size: 10px;
+        }
+        
+        .tab-item.active {
+            color: #FF6B6B;
+        }
+        
+        .tab-item.inactive {
+            color: #9E9E9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="top-navigation">
+            <div class="title">心情日记</div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 今天日记 -->
+            <div class="time-group-title">今天</div>
+            
+            <div class="diary-card">
+                <div class="diary-header">
+                    <div class="diary-date">今天 20:30</div>
+                    <div class="diary-mood">
+                        <i class="fa fa-smile-o"></i> 开心
+                    </div>
+                </div>
+                <div class="diary-title">一周年纪念日晚餐</div>
+                <div class="diary-excerpt">今天是我们认识一周年的纪念日，一起去了第一次见面的餐厅。整个晚餐氛围特别好，聊了很多有趣的回忆，感觉我们的关系又更近了一步。</div>
+                <div class="diary-media">
+                    <img src="https://images.unsplash.com/photo-1550966871-6175678056ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="晚餐照片" class="diary-image">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="礼物照片" class="diary-image">
+                    <div class="image-count-badge">+3</div>
+                </div>
+                <div class="diary-actions">
+                    <div class="diary-action">
+                        <i class="fa fa-heart-o"></i>
+                        <span>12</span>
+                    </div>
+                    <div class="diary-action">
+                        <i class="fa fa-comment-o"></i>
+                        <span>3</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 昨天日记 -->
+            <div class="time-group-title">昨天</div>
+            
+            <div class="diary-card">
+                <div class="diary-header">
+                    <div class="diary-date">昨天 19:15</div>
+                    <div class="diary-mood">
+                        <i class="fa fa-smile-o"></i> 愉快
+                    </div>
+                </div>
+                <div class="diary-title">一起看电影《爱情故事》</div>
+                <div class="diary-excerpt">我们一起去看了新上映的爱情电影，电影情节很感人，让我们更加珍惜彼此。看完电影后，我们在附近的咖啡厅聊了很久，度过了美好的时光。</div>
+                <div class="diary-media">
+                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="电影票照片" class="diary-image">
+                    <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="咖啡照片" class="diary-image">
+                </div>
+                <div class="diary-actions">
+                    <div class="diary-action">
+                        <i class="fa fa-heart-o"></i>
+                        <span>8</span>
+                    </div>
+                    <div class="diary-action">
+                        <i class="fa fa-comment-o"></i>
+                        <span>1</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 上周日记 -->
+            <div class="time-group-title">上周</div>
+            
+            <div class="diary-card">
+                <div class="diary-header">
+                    <div class="diary-date">4月15日 18:40</div>
+                    <div class="diary-mood">
+                        <i class="fa fa-meh-o"></i> 平静
+                    </div>
+                </div>
+                <div class="diary-title">一起做饭</div>
+                <div class="diary-excerpt">今天我们一起在家做饭，虽然过程有些手忙脚乱，但成品还是不错的。两个人一起动手做饭的感觉很温馨，让我想起了未来的生活。</div>
+                <div class="diary-media">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="晚餐照片" class="diary-image">
+                </div>
+                <div class="diary-actions">
+                    <div class="diary-action">
+                        <i class="fa fa-heart-o"></i>
+                        <span>5</span>
+                    </div>
+                    <div class="diary-action">
+                        <i class="fa fa-comment-o"></i>
+                        <span>2</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="diary-card">
+                <div class="diary-header">
+                    <div class="diary-date">4月12日 15:20</div>
+                    <div class="diary-mood">
+                        <i class="fa fa-smile-o"></i>
+                        <span>兴奋</span>
+                    </div>
+                </div>
+                <div class="diary-title">第一次一起旅行</div>
+                <div class="diary-excerpt">我们计划了很久的旅行终于开始了！一起收拾行李，一起出发，这种感觉真的很特别。期待接下来几天的美好时光。</div>
+                <div class="diary-actions">
+                    <div class="diary-action">
+                        <i class="fa fa-heart-o"></i>
+                        <span>15</span>
+                    </div>
+                    <div class="diary-action">
+                        <i class="fa fa-comment-o"></i>
+                        <span>4</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 添加日记按钮 -->
+            <div class="add-diary-button">
+                <i class="fa fa-plus"></i>
+            </div>
+        </div>
+        
+        <!-- 底部标签栏 -->
+        <div class="bottom-tab-bar">
+            <div class="tab-item inactive">
+                <i class="fa fa-home"></i>
+                <span>首页</span>
+            </div>
+            <div class="tab-item inactive">
+                <i class="fa fa-tasks"></i>
+                <span>任务</span>
+            </div>
+            <div class="tab-item active">
+                <i class="fa fa-book"></i>
+                <span>日记</span>
+            </div>
+            <div class="tab-item inactive">
+                <i class="fa fa-bar-chart"></i>
+                <span>统计</span>
+            </div>
+            <div class="tab-item inactive">
+                <i class="fa fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟日记卡片点击效果
+            const diaryCards = document.querySelectorAll('.diary-card');
+            diaryCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 实际应用中这里会跳转到日记详情页
+                    console.log('点击了日记卡片');
+                });
+            });
+            
+            // 模拟添加日记按钮点击效果
+            const addButton = document.querySelector('.add-diary-button');
+            addButton.addEventListener('click', function() {
+                // 实际应用中这里会跳转到创建日记页面
+                console.log('点击了添加日记按钮');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱时光 - 情侣任务打卡/心情日记 App 原型</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="test-script.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F5F5F5;
+            color: #292F36;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+            border-left: 4px solid #FF6B6B;
+            padding-left: 15px;
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .app-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .app-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .app-header {
+            padding: 15px 20px;
+            background-color: #FFE0E0;
+            border-bottom: 1px solid #F1F1F1;
+        }
+        
+        .app-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FF6B6B;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-title i {
+            margin-right: 8px;
+        }
+        
+        .app-frame {
+            width: 100%;
+            height: 852px;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .page-description {
+            padding: 15px 20px;
+            background-color: #F9F9F9;
+            border-top: 1px solid #F1F1F1;
+        }
+        
+        .page-description p {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #6E6E6E;
+            font-size: 14px;
+        }
+        
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .nav-item {
+            background-color: white;
+            color: #FF6B6B;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background-color: #FF6B6B;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+        }
+        
+        .category-section {
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1><i class="fa fa-heart"></i> 爱时光 - 情侣任务打卡/心情日记 App</h1>
+            <p>高保真 iOS 风格原型展示</p>
+        </div>
+        
+        <!-- 快速导航 -->
+        <div class="quick-nav">
+            <a href="#auth" class="nav-item"><i class="fa fa-user-circle"></i> 认证流程</a>
+            <a href="#main" class="nav-item"><i class="fa fa-th-large"></i> 主功能区</a>
+            <a href="#detail" class="nav-item"><i class="fa fa-file-text-o"></i> 详情页面</a>
+            <a href="#create" class="nav-item"><i class="fa fa-plus-circle"></i> 创建编辑</a>
+            <a href="#profile" class="nav-item"><i class="fa fa-user"></i> 个人中心</a>
+        </div>
+        
+        <!-- 认证流程部分 -->
+        <div class="category-section" id="auth">
+            <h2 class="section-title"><i class="fa fa-key"></i> 认证流程</h2>
+            <div class="app-grid">
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-star"></i> 启动页</div>
+                    </div>
+                    <iframe src="splash.html" class="app-frame" title="启动页"></iframe>
+                    <div class="page-description">
+                        <p>应用启动页面，包含品牌Logo和简短标语，提供流畅的启动动画体验。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-sign-in"></i> 登录/注册</div>
+                    </div>
+                    <iframe src="auth.html" class="app-frame" title="登录注册页"></iframe>
+                    <div class="page-description">
+                        <p>用户登录和注册界面，支持多种登录方式，采用简洁明了的表单设计。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-link"></i> 情侣配对</div>
+                    </div>
+                    <iframe src="pairing.html" class="app-frame" title="情侣配对页"></iframe>
+                    <div class="page-description">
+                        <p>情侣账号配对界面，支持配对码、二维码和链接邀请多种配对方式。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主功能区部分 -->
+        <div class="category-section" id="main">
+            <h2 class="section-title"><i class="fa fa-home"></i> 主功能区</h2>
+            <div class="app-grid">
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-dashboard"></i> 首页/仪表盘</div>
+                    </div>
+                    <iframe src="home.html" class="app-frame" title="首页"></iframe>
+                    <div class="page-description">
+                        <p>应用主界面，展示今日任务、本周进度和心情趋势图表，提供快速访问各项功能的入口。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-tasks"></i> 任务列表</div>
+                    </div>
+                    <iframe src="tasks.html" class="app-frame" title="任务列表页"></iframe>
+                    <div class="page-description">
+                        <p>任务列表页面，按时间分组显示各项任务，支持任务筛选和状态管理。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-book"></i> 日记列表</div>
+                    </div>
+                    <iframe src="diaries.html" class="app-frame" title="日记列表页"></iframe>
+                    <div class="page-description">
+                        <p>心情日记列表页面，按时间顺序展示情侣双方的心情记录，支持快速浏览。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-bar-chart"></i> 统计/成就</div>
+                    </div>
+                    <iframe src="statistics.html" class="app-frame" title="统计成就页"></iframe>
+                    <div class="page-description">
+                        <p>数据统计和成就页面，展示任务完成情况、心情趋势分析和成就解锁状态。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 详情页面部分 -->
+        <div class="category-section" id="detail">
+            <h2 class="section-title"><i class="fa fa-file-text-o"></i> 详情页面</h2>
+            <div class="app-grid">
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-tasks"></i> 任务详情</div>
+                    </div>
+                    <iframe src="task-detail.html" class="app-frame" title="任务详情页"></iframe>
+                    <div class="page-description">
+                        <p>任务详情页面，展示任务的详细信息、参与者和评论，支持任务操作和互动。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-book"></i> 日记详情</div>
+                    </div>
+                    <iframe src="diary-detail.html" class="app-frame" title="日记详情页"></iframe>
+                    <div class="page-description">
+                        <p>日记详情页面，展示完整的心情记录内容，支持图片浏览、评论和互动功能。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 创建编辑部分 -->
+        <div class="category-section" id="create">
+            <h2 class="section-title"><i class="fa fa-plus-circle"></i> 创建与编辑</h2>
+            <div class="app-grid">
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-plus"></i> 创建任务</div>
+                    </div>
+                    <iframe src="create-task.html" class="app-frame" title="创建任务页"></iframe>
+                    <div class="page-description">
+                        <p>创建新任务的表单页面，支持设置任务标题、描述、时间、标签和参与者等信息。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-plus"></i> 创建日记</div>
+                    </div>
+                    <iframe src="create-diary.html" class="app-frame" title="创建日记页"></iframe>
+                    <div class="page-description">
+                        <p>创建心情日记的编辑页面，支持文本输入、图片上传、心情选择和标签设置。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 个人中心部分 -->
+        <div class="category-section" id="profile">
+            <h2 class="section-title"><i class="fa fa-user"></i> 个人中心</h2>
+            <div class="app-grid">
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-user-circle"></i> 个人资料</div>
+                    </div>
+                    <iframe src="profile.html" class="app-frame" title="个人资料页"></iframe>
+                    <div class="page-description">
+                        <p>用户个人资料页面，展示情侣双方的基本信息、统计数据和偏好设置。</p>
+                    </div>
+                </div>
+                
+                <div class="app-container">
+                    <div class="app-header">
+                        <div class="app-title"><i class="fa fa-cog"></i> 设置</div>
+                    </div>
+                    <iframe src="settings.html" class="app-frame" title="设置页"></iframe>
+                    <div class="page-description">
+                        <p>应用设置页面，包含通知设置、隐私设置、通用设置和帮助支持等功能。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部信息 -->
+        <div class="footer">
+            <p>爱时光 - 情侣任务打卡/心情日记 App 原型展示</p>
+            <p>© 2024 高保真 iOS 风格原型设计</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 平滑滚动效果
+            document.querySelectorAll('.nav-item').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

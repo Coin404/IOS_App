@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 日记详情</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navigation {
+            position: sticky;
+            top: 44px;
+            height: 44px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .top-navigation .back-button {
+            font-size: 17px;
+            color: #FF6B6B;
+        }
+        
+        .top-navigation .title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .top-navigation .edit-button {
+            font-size: 17px;
+            color: #FF6B6B;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding-bottom: 24px;
+        }
+        
+        /* 日记卡片 */
+        .diary-card {
+            background-color: #FFFFFF;
+            padding: 20px 16px;
+        }
+        
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .diary-date {
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+        
+        .diary-mood {
+            display: flex;
+            align-items: center;
+            background-color: #FFF3E0;
+            padding: 6px 10px;
+            border-radius: 14px;
+            font-size: 14px;
+        }
+        
+        .diary-mood i {
+            margin-right: 6px;
+            color: #FF9800;
+        }
+        
+        .diary-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        
+        .diary-content {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .diary-content p {
+            margin-bottom: 12px;
+        }
+        
+        /* 图片网格 */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .grid-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        /* 底部操作区 */
+        .diary-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+            background-color: #FFFFFF;
+            margin-top: 1px;
+        }
+        
+        .action-button {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #9E9E9E;
+        }
+        
+        .action-button i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .action-button.active {
+            color: #FF6B6B;
+        }
+        
+        /* 评论区 */
+        .comments-section {
+            margin-top: 12px;
+            background-color: #FFFFFF;
+            padding: 20px 16px;
+        }
+        
+        .comments-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .comment-item {
+            margin-bottom: 20px;
+        }
+        
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            margin-right: 12px;
+        }
+        
+        .comment-info {
+            flex: 1;
+        }
+        
+        .comment-author {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .comment-time {
+            font-size: 12px;
+            color: #9E9E9E;
+        }
+        
+        .comment-content {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-left: 48px;
+        }
+        
+        /* 评论输入框 */
+        .comment-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            background-color: #FFFFFF;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .comment-input {
+            flex: 1;
+            height: 36px;
+            border-radius: 18px;
+            background-color: #F7F7F7;
+            padding: 0 16px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+        
+        .send-button {
+            margin-left: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            background-color: #FF6B6B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .send-button i {
+            color: white;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="top-navigation">
+            <div class="back-button">
+                <i class="fa fa-arrow-left"></i>
+            </div>
+            <div class="title">日记详情</div>
+            <div class="edit-button">
+                <i class="fa fa-pencil"></i>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 日记卡片 -->
+            <div class="diary-card">
+                <div class="diary-header">
+                    <div class="diary-date">今天 20:30</div>
+                    <div class="diary-mood">
+                        <i class="fa fa-smile-o"></i> 开心
+                    </div>
+                </div>
+                <div class="diary-title">一周年纪念日晚餐</div>
+                <div class="diary-content">
+                    <p>今天是我们认识一周年的纪念日！时间过得真快，感觉就像昨天才认识一样。</p>
+                    <p>我们选择了第一次见面的餐厅，那种熟悉又温馨的感觉真的很特别。餐厅还为我们准备了惊喜，送上了周年纪念的甜点，上面用巧克力写着"一周年快乐"。</p>
+                    <p>整个晚餐过程中，我们聊了很多，回顾了过去一年的点点滴滴。从第一次见面的紧张和陌生，到现在的默契和理解，每一步都值得珍惜。</p>
+                    <p>吃完晚餐后，我们在附近的公园里散步，晚风轻轻吹过，感觉无比幸福。这一年里，有欢笑也有小矛盾，但正是这些经历让我们的关系更加牢固。</p>
+                    <p>期待未来的每一个纪念日，都能和你一起度过。我爱你，我的宝贝！</p>
+                </div>
+                <div class="image-grid">
+                    <img src="https://images.unsplash.com/photo-1550966871-6175678056ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="晚餐照片1" class="grid-image">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="礼物照片" class="grid-image">
+                    <img src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="香槟照片" class="grid-image">
+                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="甜点照片" class="grid-image">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="鲜花照片" class="grid-image">
+                </div>
+            </div>
+            
+            <!-- 底部操作区 -->
+            <div class="diary-actions">
+                <div class="action-button active">
+                    <i class="fa fa-heart"></i>
+                    <span>12</span>
+                </div>
+                <div class="action-button">
+                    <i class="fa fa-comment-o"></i>
+                    <span>3</span>
+                </div>
+                <div class="action-button">
+                    <i class="fa fa-share-alt"></i>
+                    <span>分享</span>
+                </div>
+            </div>
+            
+            <!-- 评论区 -->
+            <div class="comments-section">
+                <div class="comments-title">评论 (3)</div>
+                
+                <!-- 评论1 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="伴侣头像" class="comment-avatar">
+                        <div class="comment-info">
+                            <div class="comment-author">小明</div>
+                            <div class="comment-time">今天 20:45</div>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        我也感到非常幸福！谢谢你一直以来的陪伴和爱。未来的每一天，我都会更加珍惜我们的感情。
+                    </div>
+                </div>
+                
+                <!-- 评论2 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="我的头像" class="comment-avatar">
+                        <div class="comment-info">
+                            <div class="comment-author">我</div>
+                            <div class="comment-time">今天 21:00</div>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        今晚真的很美好，我会永远记住这个特别的夜晚。
+                    </div>
+                </div>
+                
+                <!-- 评论3 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="伴侣头像" class="comment-avatar">
+                        <div class="comment-info">
+                            <div class="comment-author">小明</div>
+                            <div class="comment-time">今天 21:15</div>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        我也是，谢谢你为我准备的惊喜！
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 评论输入框 -->
+        <div class="comment-input-container">
+            <input type="text" class="comment-input" placeholder="写下你的评论...">
+            <div class="send-button">
+                <i class="fa fa-paper-plane"></i>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟返回按钮点击效果
+            const backButton = document.querySelector('.back-button');
+            backButton.addEventListener('click', function() {
+                // 实际应用中这里会返回上一页
+                console.log('点击了返回按钮');
+            });
+            
+            // 模拟编辑按钮点击效果
+            const editButton = document.querySelector('.edit-button');
+            editButton.addEventListener('click', function() {
+                // 实际应用中这里会跳转到编辑日记页面
+                console.log('点击了编辑按钮');
+            });
+            
+            // 模拟点赞按钮点击效果
+            const likeButton = document.querySelector('.action-button:first-child');
+            likeButton.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+            
+            // 模拟发送评论效果
+            const sendButton = document.querySelector('.send-button');
+            const commentInput = document.querySelector('.comment-input');
+            
+            sendButton.addEventListener('click', function() {
+                if (commentInput.value.trim()) {
+                    console.log('发送评论:', commentInput.value);
+                    commentInput.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

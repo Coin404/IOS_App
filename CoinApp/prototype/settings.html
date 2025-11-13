@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 设置</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Enhancements -->
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navigation {
+            position: sticky;
+            top: 44px;
+            height: 44px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .top-navigation .title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding-bottom: 80px;
+        }
+        
+        /* 设置分组 */
+        .settings-group {
+            margin-bottom: 24px;
+        }
+        
+        .settings-section {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        
+        .settings-header {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6E6E6E;
+            background-color: #F7F7F7;
+        }
+        
+        /* 设置项 */
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid #F1F1F1;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .setting-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+        
+        .setting-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .setting-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .setting-subtitle {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-top: 2px;
+        }
+        
+        .setting-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .setting-value {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-right: 8px;
+        }
+        
+        .setting-arrow {
+            font-size: 14px;
+            color: #C7C7CC;
+        }
+        
+        /* iOS 风格的开关 */
+        .ios-switch {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 31px;
+        }
+        
+        .ios-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E5E5EA;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:checked + .slider {
+            background-color: #FF6B6B;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        /* 账号信息卡片 */
+        .account-card {
+            background-color: #FFFFFF;
+            padding: 20px 16px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 32px;
+            background-color: #FFE0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #FF6B6B;
+            margin-right: 16px;
+        }
+        
+        .account-info {
+            flex: 1;
+        }
+        
+        .account-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .account-email {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        
+        /* 底部按钮 */
+        .bottom-buttons {
+            padding: 0 16px;
+            margin-top: 24px;
+        }
+        
+        .logout-button {
+            width: 100%;
+            padding: 14px;
+            background-color: #FFFFFF;
+            color: #FF3B30;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* 版本信息 */
+        .version-info {
+            text-align: center;
+            font-size: 12px;
+            color: #9E9E9E;
+            margin-top: 24px;
+            padding-bottom: 32px;
+        }
+        
+        /* 底部标签栏 */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 49px;
+            background-color: #FFFFFF;
+            display: flex;
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tab-item i {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+        
+        .tab-item span {
+            font-size: 10px;
+        }
+        
+        .tab-item.active {
+            color: #FF6B6B;
+        }
+        
+        .tab-item.inactive {
+            color: #9E9E9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="top-navigation">
+            <div class="title">设置</div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 账号信息卡片 -->
+            <div class="account-card">
+                <div class="profile-avatar">
+                    <i class="fa fa-heart"></i>
+                </div>
+                <div class="account-info">
+                    <div class="account-name">小王子 & 小公主</div>
+                    <div class="account-email">joined 14 days ago</div>
+                </div>
+                <div class="setting-arrow">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+            </div>
+            
+            <!-- 通知设置 -->
+            <div class="settings-group">
+                <div class="settings-header">通知</div>
+                <div class="settings-section">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #E3F2FD; color: #2196F3;">
+                                <i class="fa fa-bell"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">推送通知</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <label class="ios-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #E8F5E9; color: #4CAF50;">
+                                <i class="fa fa-calendar-check-o"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">任务提醒</div>
+                                <div class="setting-subtitle">任务开始前30分钟</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <label class="ios-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #FFF3E0; color: #FF9800;">
+                                <i class="fa fa-birthday-cake"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">纪念日提醒</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <label class="ios-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 隐私设置 -->
+            <div class="settings-group">
+                <div class="settings-header">隐私</div>
+                <div class="settings-section">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #F3E5F5; color: #9C27B0;">
+                                <i class="fa fa-lock"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">隐私设置</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <div class="setting-arrow">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #E0F7FA; color: #00BCD4;">
+                                <i class="fa fa-eye-slash"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">私密日记</div>
+                                <div class="setting-subtitle">仅情侣双方可见</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <label class="ios-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #FFEBEE; color: #F44336;">
+                                <i class="fa fa-trash"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">清理缓存</div>
+                                <div class="setting-subtitle">当前缓存: 12.4 MB</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <div class="setting-arrow">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 通用设置 -->
+            <div class="settings-group">
+                <div class="settings-header">通用</div>
+                <div class="settings-section">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #FAFAFA; color: #616161;">
+                                <i class="fa fa-globe"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">语言</div>
+                                <div class="setting-subtitle">简体中文</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <div class="setting-arrow">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #FAFAFA; color: #616161;">
+                                <i class="fa fa-moon-o"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">深色模式</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <label class="ios-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关于与帮助 -->
+            <div class="settings-group">
+                <div class="settings-header">关于与帮助</div>
+                <div class="settings-section">
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #E8F5E9; color: #4CAF50;">
+                                <i class="fa fa-question-circle"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">帮助与支持</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <div class="setting-arrow">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #E3F2FD; color: #2196F3;">
+                                <i class="fa fa-info-circle"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">关于我们</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <div class="setting-arrow">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon" style="background-color: #FFF3E0; color: #FF9800;">
+                                <i class="fa fa-star-o"></i>
+                            </div>
+                            <div class="setting-info">
+                                <div class="setting-title">给我们评分</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <div class="setting-arrow">
+                                <i class="fa fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 登出按钮 -->
+            <div class="bottom-buttons">
+                <button class="logout-button">退出登录</button>
+            </div>
+            
+            <!-- 版本信息 -->
+            <div class="version-info">
+                爱时光 v1.0.0
+            </div>
+        </div>
+        
+        <!-- 底部标签栏 -->
+        <div class="bottom-tab-bar">
+            <div class="tab-item inactive">
+                <i class="fa fa-home"></i>
+                <span>首页</span>
+            </div>
+            <div class="tab-item inactive">
+                <i class="fa fa-tasks"></i>
+                <span>任务</span>
+            </div>
+            <div class="tab-item inactive">
+                <i class="fa fa-book"></i>
+                <span>日记</span>
+            </div>
+            <div class="tab-item inactive">
+                <i class="fa fa-bar-chart"></i>
+                <span>统计</span>
+            </div>
+            <div class="tab-item active">
+                <i class="fa fa-cog"></i>
+                <span>设置</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟开关切换效果
+            const toggleSwitches = document.querySelectorAll('.ios-switch input');
+            toggleSwitches.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    console.log('Switch changed:', this.checked);
+                });
+            });
+            
+            // 模拟设置项点击
+            const settingItems = document.querySelectorAll('.setting-item');
+            settingItems.forEach(item => {
+                // 排除包含开关的设置项
+                if (!item.querySelector('.ios-switch')) {
+                    item.addEventListener('click', function() {
+                        console.log('Setting item clicked:', this.querySelector('.setting-title').textContent);
+                    });
+                }
+            });
+            
+            // 模拟登出按钮
+            const logoutButton = document.querySelector('.logout-button');
+            logoutButton.addEventListener('click', function() {
+                alert('确定要退出登录吗？');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 登录/注册</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Enhancements -->
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding-top: 88px;
+            padding-bottom: 40px;
+            padding-left: 24px;
+            padding-right: 24px;
+            min-height: 100vh;
+        }
+        
+        /* 头部Logo和标题 */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            background-color: #FF6B6B;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 16px auto;
+        }
+        
+        .auth-logo i {
+            font-size: 40px;
+            color: #FFFFFF;
+        }
+        
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .auth-subtitle {
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+        
+        /* 标签切换 */
+        .auth-tabs {
+            display: flex;
+            background-color: #F1F1F1;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .auth-tab.active {
+            background-color: #FFFFFF;
+            color: #FF6B6B;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .auth-tab.inactive {
+            color: #9E9E9E;
+        }
+        
+        /* 表单样式 */
+        .auth-form {
+            margin-bottom: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #292F36;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s ease;
+            background-color: #FFFFFF;
+        }
+        
+        .form-input:focus {
+            border-color: #FF6B6B;
+        }
+        
+        .form-input::placeholder {
+            color: #9E9E9E;
+        }
+        
+        /* 按钮样式 */
+        .auth-button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            margin-bottom: 16px;
+        }
+        
+        .auth-button-primary {
+            background-color: #FF6B6B;
+            color: #FFFFFF;
+        }
+        
+        .auth-button-secondary {
+            background-color: #F1F1F1;
+            color: #292F36;
+        }
+        
+        /* 生物识别登录 */
+        .biometric-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #F1F1F1;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        
+        .biometric-login i {
+            font-size: 24px;
+            color: #292F36;
+        }
+        
+        /* 帮助链接 */
+        .auth-help {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .auth-help a {
+            font-size: 14px;
+            color: #FF6B6B;
+            text-decoration: none;
+        }
+        
+        /* 分隔线 */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #E0E0E0;
+        }
+        
+        .divider-text {
+            padding: 0 16px;
+            font-size: 14px;
+            color: #9E9E9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 头部Logo和标题 -->
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fa fa-heart"></i>
+                </div>
+                <div class="auth-title">爱时光</div>
+                <div class="auth-subtitle">登录您的账户，开始记录美好时光</div>
+            </div>
+            
+            <!-- 标签切换 -->
+            <div class="auth-tabs">
+                <div class="auth-tab active">登录</div>
+                <div class="auth-tab inactive">注册</div>
+            </div>
+            
+            <!-- 登录表单 -->
+            <div class="auth-form" id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">邮箱</label>
+                    <input type="email" id="email" class="form-input" placeholder="请输入您的邮箱">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">密码</label>
+                    <input type="password" id="password" class="form-input" placeholder="请输入您的密码">
+                </div>
+                
+                <button class="auth-button auth-button-primary">登录</button>
+                
+                <div class="auth-help">
+                    <a href="#">忘记密码？</a>
+                    <a href="#">切换账户</a>
+                </div>
+                
+                <div class="divider">
+                    <span class="divider-text">或</span>
+                </div>
+                
+                <div class="biometric-login">
+                    <i class="fa fa-fingerprint"></i>
+                </div>
+            </div>
+            
+            <!-- 注册表单 (默认隐藏) -->
+            <div class="auth-form" id="register-form" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label" for="reg-username">昵称</label>
+                    <input type="text" id="reg-username" class="form-input" placeholder="请输入您的昵称">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="reg-email">邮箱</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="请输入您的邮箱">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="reg-password">密码</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="请设置6-20位密码">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="reg-confirm">确认密码</label>
+                    <input type="password" id="reg-confirm" class="form-input" placeholder="请再次输入密码">
+                </div>
+                
+                <button class="auth-button auth-button-primary">注册</button>
+                
+                <div class="text-center text-sm text-gray-dark">
+                    注册即表示您同意我们的
+                    <a href="#" class="text-primary">服务条款</a>和
+                    <a href="#" class="text-primary">隐私政策</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 标签切换逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginTab = document.querySelector('.auth-tab.active');
+            const registerTab = document.querySelector('.auth-tab.inactive');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            
+            loginTab.addEventListener('click', function() {
+                loginTab.classList.add('active');
+                loginTab.classList.remove('inactive');
+                registerTab.classList.add('inactive');
+                registerTab.classList.remove('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            });
+            
+            registerTab.addEventListener('click', function() {
+                registerTab.classList.add('active');
+                registerTab.classList.remove('inactive');
+                loginTab.classList.add('inactive');
+                loginTab.classList.remove('active');
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

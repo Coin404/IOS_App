@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>情侣任务打卡/心情日记 - 创建任务</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="enhancements.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #292F36;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+        
+        /* iOS 状态栏 */
+        .ios-status-bar {
+            height: 44px;
+            background-color: #FFFFFF;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+        
+        /* 模拟iPhone 15 Pro容器 */
+        .iphone-container {
+            width: 393px;
+            height: 852px;
+            margin: 0 auto;
+            background-color: #F7F7F7;
+            border-radius: 44px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navigation {
+            position: sticky;
+            top: 44px;
+            height: 44px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .top-navigation .title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .top-navigation .back-button {
+            font-size: 17px;
+            color: #FF6B6B;
+        }
+        
+        .top-navigation .done-button {
+            font-size: 17px;
+            color: #FF6B6B;
+            font-weight: 600;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            padding-bottom: 24px;
+            min-height: 100vh;
+        }
+        
+        /* 表单卡片 */
+        .form-card {
+            background-color: #FFFFFF;
+            padding: 20px 16px;
+            margin-bottom: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #292F36;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background-color: #F7F7F7;
+        }
+        
+        .form-input::placeholder {
+            color: #9E9E9E;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background-color: #F7F7F7;
+            resize: none;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+        
+        .form-textarea::placeholder {
+            color: #9E9E9E;
+        }
+        
+        /* 日期时间选择 */
+        .date-time-picker {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .date-picker,
+        .time-picker {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background-color: #F7F7F7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .date-picker {
+            margin-right: 8px;
+        }
+        
+        .time-picker {
+            margin-left: 8px;
+        }
+        
+        .picker-value {
+            font-size: 16px;
+        }
+        
+        /* 标签选择 */
+        .tags-section {
+            margin-bottom: 16px;
+        }
+        
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        .tag-option {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tag-option.selected {
+            background-color: #FFE0E0;
+            color: #FF6B6B;
+            font-weight: 500;
+        }
+        
+        .tag-option.unselected {
+            background-color: #F1F1F1;
+            color: #6E6E6E;
+        }
+        
+        .add-tag-button {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            background-color: #F1F1F1;
+            color: #6E6E6E;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .add-tag-button i {
+            margin-right: 4px;
+        }
+        
+        /* 提醒设置 */
+        .reminder-setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #F1F1F1;
+        }
+        
+        .reminder-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .reminder-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #E0F2FE;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+        
+        .reminder-icon i {
+            font-size: 16px;
+            color: #0EA5E9;
+        }
+        
+        .reminder-text {
+            font-size: 16px;
+        }
+        
+        /* 开关控件 */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E0E0E0;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-input:checked + .toggle-slider {
+            background-color: #FF6B6B;
+        }
+        
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* 参与者选择 */
+        .participants-section {
+            padding: 20px 16px;
+            background-color: #FFFFFF;
+        }
+        
+        .participants-list {
+            margin-top: 12px;
+        }
+        
+        .participant-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            border: 2px solid #E0E0E0;
+            margin-right: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .checkbox-custom.checked {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+        }
+        
+        .participant-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            margin-right: 12px;
+        }
+        
+        .participant-details {
+            flex: 1;
+        }
+        
+        .participant-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .participant-role {
+            font-size: 12px;
+            color: #9E9E9E;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <!-- iOS 状态栏 -->
+        <div class="ios-status-bar">
+            <div class="text-dark font-semibold">9:41</div>
+            <div class="flex space-x-2 text-dark">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="top-navigation">
+            <div class="back-button">
+                <i class="fa fa-arrow-left"></i>
+            </div>
+            <div class="title">创建任务</div>
+            <div class="done-button">完成</div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 任务标题和描述 -->
+            <div class="form-card">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="任务标题" value="一起晚餐">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-textarea" placeholder="添加任务描述...">今天是我们认识一周年的纪念日，一起去我们第一次见面的餐厅吃晚餐。记得带上相机，我们可以拍些照片留念。</textarea>
+                </div>
+            </div>
+            
+            <!-- 日期和时间 -->
+            <div class="form-card">
+                <div class="form-label">日期和时间</div>
+                <div class="date-time-picker">
+                    <div class="date-picker">
+                        <div class="picker-value">今天</div>
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <div class="time-picker">
+                        <div class="picker-value">19:00</div>
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                </div>
+                <div class="date-time-picker">
+                    <div class="date-picker" style="flex: 1;">
+                        <div class="picker-value">地点: 城市餐厅</div>
+                        <i class="fa fa-map-marker"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 任务标签 -->
+            <div class="form-card">
+                <div class="form-label">任务标签</div>
+                <div class="tags-list">
+                    <div class="tag-option selected">约会</div>
+                    <div class="tag-option unselected">日常</div>
+                    <div class="tag-option unselected">生活</div>
+                    <div class="tag-option unselected">健康</div>
+                    <div class="tag-option unselected">娱乐</div>
+                </div>
+                <div class="add-tag-button">
+                    <i class="fa fa-plus"></i> 添加标签
+                </div>
+            </div>
+            
+            <!-- 提醒设置 -->
+            <div class="form-card">
+                <div class="form-label">提醒设置</div>
+                <div class="reminder-setting">
+                    <div class="reminder-info">
+                        <div class="reminder-icon">
+                            <i class="fa fa-bell"></i>
+                        </div>
+                        <div class="reminder-text">任务开始前30分钟提醒</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="reminder-setting">
+                    <div class="reminder-info">
+                        <div class="reminder-icon">
+                            <i class="fa fa-bell-slash"></i>
+                        </div>
+                        <div class="reminder-text">重复此任务</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 参与者选择 -->
+            <div class="participants-section">
+                <div class="form-label">选择参与者</div>
+                <div class="participants-list">
+                    <div class="participant-checkbox">
+                        <div class="checkbox-custom checked">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <div class="participant-info">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="我的头像" class="participant-avatar">
+                            <div class="participant-details">
+                                <div class="participant-name">我</div>
+                                <div class="participant-role">创建者</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="participant-checkbox">
+                        <div class="checkbox-custom checked">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <div class="participant-info">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="伴侣头像" class="participant-avatar">
+                            <div class="participant-details">
+                                <div class="participant-name">小明</div>
+                                <div class="participant-role">情侣</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签选择交互
+            const tagOptions = document.querySelectorAll('.tag-option');
+            tagOptions.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    this.classList.toggle('unselected');
+                });
+            });
+            
+            // 参与者复选框交互
+            const checkboxes = document.querySelectorAll('.checkbox-custom');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                    if (this.classList.contains('checked')) {
+                        this.innerHTML = '<i class="fa fa-check text-white"></i>';
+                    } else {
+                        this.innerHTML = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
