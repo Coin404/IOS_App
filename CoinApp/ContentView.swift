@@ -151,7 +151,7 @@ struct ContentView: View {
                     .padding(.bottom, 40)
                 }
                 .navigationDestination(isPresented: $showHelloWorld) {
-                    HelloWorldView()
+                    CoupleSpaceView()
                 }
             }
         }
