@@ -101,116 +101,125 @@ struct MoodDiaryCalendarView: View {
     // 主视图
     var body: some View {
         // 根容器
-        VStack() {
-            // 顶部栏 - 从顶部开始
-            self.createTopBar()
+        ZStack {
+            // 背景图片
+            Image("back_mood")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .ignoresSafeArea()
+                .offset(y: 120) // 背景图往下移动50点
+                .opacity(0.3)
             
-            // 日历内容 - 居中显示
             VStack() {
-                if isLoading {
-                    // 加载状态
-                    Text("Loading...")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.gray)
-                } else if currentDateInfo != nil {
-                    // 星期标题
-                    HStack(spacing: 0) {
-                        Text("一")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                        Text("二")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                        Text("三")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                        Text("四")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                        Text("五")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                        Text("六")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                        Text("日")
-                            .font(.system(size: 20))
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .padding(.horizontal, 20)
-                    
-                    // 日历网格
-                    let dates = currentMonthDates
-                    let firstDayOfWeek = getDayOfWeek(dates.first ?? Date())
-                    
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 16) {
-                        // 填充月初空白
-                        ForEach(0..<(firstDayOfWeek - 1), id: \.self) { _ in
-                            Text("")
-                        }
-                        
-                        // 显示日期
-                        ForEach(dates, id: \.self) { date in
-                            let day = Calendar.current.component(.day, from: date)
-                            let isToday = Calendar.current.isDateInToday(date)
-                            
-                            VStack() {
-                                // 日期数字
-                                Text("\(day)")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(isToday ? .orange : .gray)
-                                    .fontWeight(isToday ? .bold : .regular)
-                                
-                                // 心情图标
-                                if isToday {
-                                    // 当天显示小太阳图标在小圆圈内
-                                    ZStack {
-                                        // 空心圆圈背景（黑色线条）
-                                        Image(systemName: "circle")
-                                            .foregroundColor(.gray.opacity(0.5)) 
-                                            .font(.system(size: 40, weight: .ultraLight))
-                                           // 小太阳图标
-                                        Image(systemName: "sun.min.fill")
-                                            .foregroundColor(.yellow)
-                                            .font(.system(size: 30))
-                                    }
-                                    .frame(width: 40, height: 40)
-                                } else {
-                                    ZStack {
-                                        Image(systemName: "circle")
-                                            .foregroundColor(.gray.opacity(0.5))
-                                            .font(.system(size: 40, weight: .ultraLight))
-                               
-                                    }
-                                    .frame(width: 40, height: 40)
-                                }
-                            }
-                            .frame(height: 80)
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                } else {
-                    // 初始状态
-                    Text("获取日期信息失败")
-                        .font(.system(size: 20))
-                        .foregroundColor(.gray)
-                }
+                // 顶部栏 - 从顶部开始
+                self.createTopBar()
                 
+                // 日历内容 - 居中显示
+                VStack() {
+                    if isLoading {
+                        // 加载状态
+                        Text("Loading...")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.gray)
+                    } else if currentDateInfo != nil {
+                        // 星期标题
+                        HStack(spacing: 0) {
+                            Text("一")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                            Text("二")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                            Text("三")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                            Text("四")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                            Text("五")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                            Text("六")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                            Text("日")
+                                .font(.system(size: 20))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        // 日历网格
+                        let dates = currentMonthDates
+                        let firstDayOfWeek = getDayOfWeek(dates.first ?? Date())
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 16) {
+                            // 填充月初空白
+                            ForEach(0..<(firstDayOfWeek - 1), id: \.self) { _ in
+                                Text("")
+                            }
+                            
+                            // 显示日期
+                            ForEach(dates, id: \.self) { date in
+                                let day = Calendar.current.component(.day, from: date)
+                                let isToday = Calendar.current.isDateInToday(date)
+                                
+                                VStack() {
+                                    // 日期数字
+                                    Text("\(day)")
+                                        .font(.system(size: 20))
+                                        .foregroundColor(isToday ? .orange : .gray)
+                                        .fontWeight(isToday ? .bold : .regular)
+                                    
+                                    // 心情图标
+                                    if isToday {
+                                        // 当天显示小太阳图标在小圆圈内
+                                        ZStack {
+                                            // 空心圆圈背景（黑色线条）
+                                            Image(systemName: "circle")
+                                                .foregroundColor(.gray.opacity(0.8)) 
+                                                .font(.system(size: 40, weight: .ultraLight))
+                                               // 小太阳图标
+                                            Image(systemName: "sun.min.fill")
+                                                .foregroundColor(.yellow)
+                                                .font(.system(size: 30))
+                                        }
+                                        .frame(width: 40, height: 40)
+                                    } else {
+                                        ZStack {
+                                            Image(systemName: "circle")
+                                                .foregroundColor(.gray.opacity(0.8))
+                                                .font(.system(size: 40, weight: .ultraLight))
+                                       
+                                        }
+                                        .frame(width: 40, height: 40)
+                                    }
+                                }
+                                .frame(height: 80)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    } else {
+                        // 初始状态
+                        Text("获取日期信息失败")
+                            .font(.system(size: 20))
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.top, 30)
+                
+                // 空白区域 - 保持日历内容居中
                 Spacer()
             }
-            .padding(.top, 30)
-            
-            // 空白区域 - 保持日历内容居中
-            Spacer()
         }
-        .background(Color.white)
         .onAppear {
             // 页面加载时获取日期信息
             Task {

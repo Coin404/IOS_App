@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct CoupleSpaceView: View {
+    @State private var showMoodDiary = false
+    
     var body: some View {
         ZStack {
             Color.white
@@ -16,7 +18,7 @@ struct CoupleSpaceView: View {
             VStack(spacing: 0) {
                 // Top background image with gradient
                 ZStack {
-                    Image("miemie")
+                    Image("back_space")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(height: 250)
@@ -59,22 +61,26 @@ struct CoupleSpaceView: View {
                         GridItem(.flexible())
                     ], spacing: 30) {
                         // Mood Diary
-                        VStack(spacing: 8) {
-                            ZStack {
-                                HandDrawnCircle()
-                                    .stroke(Color(.darkGray), lineWidth: 3)
-                                    .frame(width: 60, height: 60)
+                        Button(action: {
+                            showMoodDiary = true
+                        }) {
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    HandDrawnCircle()
+                                        .stroke(Color(.darkGray), lineWidth: 3)
+                                        .frame(width: 60, height: 60)
+                                    
+                                    Image("love_book")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 45, height: 45)
+                                        .foregroundColor(Color(.darkGray))
+                                }
                                 
-                                Image("love_book")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 45, height: 45)
+                                Text("心情日记")
+                                    .font(.system(size: 14))
                                     .foregroundColor(Color(.darkGray))
                             }
-                            
-                            Text("心情日记")
-                                .font(.system(size: 14))
-                                .foregroundColor(Color(.darkGray))
                         }
                         
                         // Love Album
@@ -159,6 +165,9 @@ struct CoupleSpaceView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+        }
+        .navigationDestination(isPresented: $showMoodDiary) {
+            MoodDiaryCalendarView()
         }
     }
 }
